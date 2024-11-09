@@ -21,6 +21,8 @@ import { themes } from "./utils/themes";
 import HandleServiceWorker from "./utils/HandleSW";
 import InteractLayout from "./components/page_layout/InteractLayout";
 import InteractTopicPage from "./pages/InteractTopicPage";
+import TopicPage from "./pages/Topic/TopicPage";
+import ModerateTopicPage from "./pages/Topic/ModerateTopicPage";
 
 const CustomizeRenderEmpty = () => {
   return (
@@ -89,6 +91,15 @@ function App() {
                 <Route path="signup" element={<SignUpPage />} />
                 <Route path="topics" element={<TopicsPage />} />
                 <Route path="settings" element={<SettingsPage />} />
+                <Route path="topics/:topicId" element={<TopicPage />} />
+                <Route
+                  path="topics/:topicId/moderate"
+                  element={<ModerateTopicPage />}
+                />
+                <Route
+                  path="topics/:topicId/preview"
+                  element={<InteractTopicPage />}
+                />
               </Route>
               <Route
                 path="interact"

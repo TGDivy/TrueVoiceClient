@@ -4,15 +4,6 @@ import { API_DOMAIN } from "src/utils/constants";
 import { handleAxiosError } from "./errors";
 import { convertDateStringsToDates } from "src/utils/text";
 
-export interface TopicDocument {
-  _id: string;
-  name: string;
-  description: string;
-  createdAt: string;
-  updatedAt: string;
-  title: string;
-}
-
 export const conversationAPI = axios.create({
   baseURL: `${API_DOMAIN}`,
   headers: {
@@ -63,9 +54,7 @@ export const getTopics = async () => {
 };
 
 export const getTopic = async (topicId: string) => {
-  const response = await conversationAPI.get<TopicDocument>(
-    `/topic/${topicId}`
-  );
+  const response = await conversationAPI.get<Topic>(`/topic/${topicId}`);
   return response.data;
 };
 
@@ -102,7 +91,7 @@ export const getCommentsForTopic = async (topicId: string) => {
 };
 
 export const getPendingCommentsForTopic = async (topicId: string) => {
-  const response = await conversationAPI.get<TopicComment[]>(
+  const response = await conversationAPI.get<TopicComment[][]>(
     `/topic/${topicId}/pending_comments`
   );
   return response.data;
