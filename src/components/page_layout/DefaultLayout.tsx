@@ -11,8 +11,11 @@ const DefaultLayout = () => {
   const user = useUserStore((state) => state.user);
   const location = useLocation();
 
-  if (!user && location.pathname !== "/signup") {
-    // message.error("You must be logged in to view this page.");
+  if (
+    !user &&
+    location.pathname !== "/signup" &&
+    location.pathname.startsWith("/interact")
+  ) {
     return <Navigate to="/signup" />;
   }
 

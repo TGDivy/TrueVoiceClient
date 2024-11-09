@@ -1,9 +1,4 @@
-import {
-  AimOutlined,
-  BookFilled,
-  CheckSquareOutlined,
-  FolderFilled,
-} from "@ant-design/icons";
+import { CheckSquareOutlined, FolderFilled } from "@ant-design/icons";
 import { Col, Row, Typography } from "antd";
 import LinkCard from "src/components/basics/LinkCard";
 import useUserStore from "src/stores/user_store";
@@ -53,7 +48,7 @@ export const HomePage = () => {
                 color: token.colorTextDisabled,
               }}
             >
-              Welcome to Odyssey!
+              Welcome to Polis!
             </span>
             <br />
           </Typography.Title>
@@ -75,22 +70,14 @@ export const HomePage = () => {
           }}
         >
           <LinkCard
-            to="/projects"
-            title="Create New Conversations"
+            to="/topics"
+            title="Manage Conversations"
             icon={<FolderFilled />}
           />
-          <LinkCard
-            to="/tasks"
-            title="Integrate"
-            icon={<CheckSquareOutlined />}
-          />
+
+          <LinkCard title="Integrate" icon={<CheckSquareOutlined />} />
         </Col>
-        <Col
-          md={24}
-          style={{
-            textAlign: "center",
-          }}
-        >
+        <Col md={24}>
           <Typography.Title level={5} disabled>
             New Features Coming Soon
           </Typography.Title>

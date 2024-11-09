@@ -2,12 +2,9 @@ import { GoogleOutlined } from "@ant-design/icons";
 import { Button, Col, Row, Typography } from "antd";
 import { onSignInWithGoogle } from "src/api/firebase/authentication";
 import useUserStore from "src/stores/user_store";
-import { useToken } from "src/utils/antd_components";
 
 export const SignUpPage = () => {
   const user = useUserStore((state) => state.user);
-  const { token } = useToken();
-
   return (
     <div
       style={{
@@ -18,7 +15,7 @@ export const SignUpPage = () => {
       }}
     >
       <Row
-        gutter={[16, 16]}
+        gutter={[16, 24]}
         style={{
           maxWidth: "850px",
           overflow: "hidden",
@@ -56,8 +53,6 @@ export const SignUpPage = () => {
             </Typography.Paragraph>
             <Button
               type="primary"
-              size="large"
-              // block
               icon={<GoogleOutlined />}
               onClick={onSignInWithGoogle}
             >
@@ -65,6 +60,16 @@ export const SignUpPage = () => {
             </Button>
           </Col>
         )}
+        <Col md={24}>
+          <Typography.Title level={3} disabled>
+            Read
+          </Typography.Title>
+          <Typography.Paragraph>
+            Press coverage from The New York Times, MIT Tech Review, Wired, The
+            Economist, Center for Public Impact, Civicist, and a mini
+            documentary from BBC
+          </Typography.Paragraph>
+        </Col>
       </Row>
     </div>
   );

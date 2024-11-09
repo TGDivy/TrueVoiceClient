@@ -1,25 +1,16 @@
 import {
-  HourglassOutlined,
-  InfoOutlined,
   MoonOutlined,
-  OrderedListOutlined,
   ProjectOutlined,
-  ReadOutlined,
   SettingOutlined,
   SunOutlined,
 } from "@ant-design/icons";
 import { Flex, Menu, Switch } from "antd";
 import { ItemType, MenuItemType } from "antd/es/menu/hooks/useItems";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import useProjectStore from "src/stores/projects_store";
+import useTopicStore from "src/stores/topics_store";
 import useUserStore from "src/stores/user_store";
 
 const settingsItems: ItemType<MenuItemType>[] = [
-  {
-    key: "philosophy",
-    label: <Link to="/philosophy">Principles</Link>,
-    icon: <InfoOutlined />,
-  },
   {
     key: "settings",
     label: <Link to="/settings">Settings</Link>,
@@ -35,25 +26,19 @@ interface BottomMenuProps {
 export const TopMenu = ({ onSelect, themeCollapsed }: BottomMenuProps) => {
   const location = useLocation();
   const theme = useUserStore((state) => state.theme);
-  const projects = useProjectStore((state) => state.projects);
+  const topics = useTopicStore((state) => state.topics);
   const navigate = useNavigate();
   const mainItems: ItemType<MenuItemType>[] = [
     {
-      key: "focus",
-      label: <Link to="/focus">Focus</Link>,
-      icon: <HourglassOutlined />,
-    },
-    {
-      key: "projects",
-      label: "Projects",
+      key: "topics",
+      label: "Conversations",
       icon: <ProjectOutlined />,
       onTitleClick: () => {
-        navigate("/projects");
+        navigate("/topics");
       },
-      children: projects.map((project) => ({
-        key: project._id,
-        label: <Link to={`/projects/${project._id}`}>{project.title}</Link>,
-        icon: project?.emoji?.skins[0].native,
+      children: topics.map((topic) => ({
+        key: topic.topic_id,
+        label: <Link to={`/topics/${topic.topic_id}`}>{topic.title}</Link>,
         style: {
           lineHeight: "28px",
           height: "28px",
@@ -61,16 +46,6 @@ export const TopMenu = ({ onSelect, themeCollapsed }: BottomMenuProps) => {
           marginTop: "8px",
         },
       })),
-    },
-    {
-      key: "tasks",
-      label: <Link to="/tasks">Tasks</Link>,
-      icon: <OrderedListOutlined />,
-    },
-    {
-      key: "journals",
-      label: <Link to="/journals">Journal</Link>,
-      icon: <ReadOutlined />,
     },
   ];
   const selectedKeys = location.pathname.split("/");

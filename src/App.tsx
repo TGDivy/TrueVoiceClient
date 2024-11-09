@@ -12,7 +12,7 @@ import DefaultLayout from "./components/page_layout/DefaultLayout";
 import "./global.css";
 import { HomePage } from "./pages/HomePage";
 import PageNotFound from "./pages/Misc/PageNotFound";
-import ProjectsPage from "./pages/Project/ProjectsPage";
+import TopicsPage from "./pages/Topic/TopicsPage";
 import SettingsPage from "./pages/SettingsPage";
 import { SignUpPage } from "./pages/Misc/SignUpPage";
 import useUserStore from "./stores/user_store";
@@ -85,8 +85,11 @@ function App() {
               <Route path="" element={<DefaultLayout />} key={"home_page"}>
                 <Route path="" element={<HomePage />} />
                 <Route path="signup" element={<SignUpPage />} />
-                <Route path="projects" element={<ProjectsPage />} />
+                <Route path="topics" element={<TopicsPage />} />
                 <Route path="settings" element={<SettingsPage />} />
+              </Route>
+              <Route path="" key={"home_page"}>
+                <Route path="settings2" element={<SettingsPage />} />
                 <Route path="*" element={<PageNotFound />} />
               </Route>
             </Route>

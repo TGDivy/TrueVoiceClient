@@ -1,6 +1,5 @@
 import { SendOutlined } from "@ant-design/icons";
 import {
-  Avatar,
   Button,
   Card,
   Flex,
@@ -12,21 +11,21 @@ import {
 } from "antd";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-// import { createProject } from "src/api/project";
-import useProjectStore from "src/stores/projects_store";
+import { createTopic } from "src/api/conversation";
+import useTopicStore from "src/stores/topics_store";
 import { useToken } from "src/utils/antd_components";
 import { formatText } from "src/utils/text";
 
-const CreateProject = () => {
+const CreateTopic = () => {
   const [title, setTitle] = useState("");
-  // const addProject = useProjectStore((state) => state.addProject);
+  const addTopic = useTopicStore((state) => state.addTopic);
 
-  const handleCreateProject = async () => {
+  const handleCreateTopic = async () => {
     try {
-      // const project = await createProject({ title, completed: false });
+      const topic = await createTopic({ title, description: "" });
       setTitle("");
-      message.success("Project created");
-      // addProject(project);
+      message.success("Topic created");
+      addTopic(topic);
     } catch (error) {
       if (error instanceof Error) {
         message.error(error.message);
@@ -38,15 +37,14 @@ const CreateProject = () => {
   return (
     <Flex>
       <Input
-        placeholder="Create a new project"
+        placeholder="Create a new conversation topic"
         variant="filled"
         size="large"
         value={title}
         onChange={(e) => setTitle(e.target.value)}
-        onPressEnter={handleCreateProject}
+        onPressEnter={handleCreateTopic}
         styles={{
           affixWrapper: {
-            borderRadius: "80px",
             padding: "16px 32px",
           },
         }}
@@ -55,7 +53,7 @@ const CreateProject = () => {
             <Button
               type="text"
               size="small"
-              onClick={handleCreateProject}
+              onClick={handleCreateTopic}
               icon={<SendOutlined />}
               style={{
                 opacity: title ? 1 : 0,
@@ -68,14 +66,13 @@ const CreateProject = () => {
   );
 };
 
-const ProjectsPage = () => {
-  const [projects, loading] = useProjectStore((state) => [
-    state.projects,
+const TopicsPage = () => {
+  const [topics, loading] = useTopicStore((state) => [
+    state.topics,
     state.loading,
   ]);
 
   const { token } = useToken();
-  const [hover, setHover] = useState<string>();
 
   return (
     <div
@@ -103,7 +100,7 @@ const ProjectsPage = () => {
             width: "100%",
           }}
           loading={loading}
-          dataSource={projects || []}
+          dataSource={topics || []}
           grid={{
             gutter: 16,
             xs: 1,
@@ -115,44 +112,18 @@ const ProjectsPage = () => {
           }}
           renderItem={(item) => (
             <List.Item>
-              <Link to={`/projects/${item._id}`}>
+              <Link to={`/topics/${item.topic_id}`}>
                 <Card
                   style={{
                     height: "200px",
                     position: "relative",
                   }}
                   hoverable
-                  // onHover
-                  onMouseEnter={() => setHover(item._id as unknown as string)}
-                  onMouseLeave={() => setHover(undefined)}
                   bordered={false}
                 >
                   <Typography.Text strong>
                     {formatText(item.title)}
                   </Typography.Text>
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: 0,
-                      right: 0,
-                      padding: "14px",
-                    }}
-                  >
-                    {item.emoji && (
-                      <Avatar
-                        size="large"
-                        style={{
-                          backgroundColor: token.colorBgLayout,
-                          border:
-                            hover === item._id
-                              ? `2px solid ${token.colorBorder}`
-                              : "none",
-                        }}
-                      >
-                        {item.emoji.skins[0].native}
-                      </Avatar>
-                    )}
-                  </div>
                 </Card>
               </Link>
             </List.Item>
@@ -169,10 +140,10 @@ const ProjectsPage = () => {
           zIndex: 100,
         }}
       >
-        <CreateProject />
+        <CreateTopic />
       </div>
     </div>
   );
 };
 
-export default ProjectsPage;
+export default TopicsPage;

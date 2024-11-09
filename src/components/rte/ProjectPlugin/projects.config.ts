@@ -2,7 +2,7 @@ import { MentionOptions } from "@tiptap/extension-mention";
 import { ReactRenderer } from "@tiptap/react";
 import Fuse from "fuse.js";
 import { RefAttributes } from "react";
-import useProjectStore from "src/stores/projects_store";
+import useTopicStore from "src/stores/topics_store";
 import tippy, { GetReferenceClientRect, Instance, Props } from "tippy.js";
 import MentionList, { MentionListProps, MentionListRef } from "./MentionList";
 
@@ -12,7 +12,7 @@ export const projectsConfig: Partial<MentionOptions> = {
     allowSpaces: true,
 
     items: ({ query }) => {
-      const projects = useProjectStore.getState().projects;
+      const projects = useTopicStore.getState().topics;
       if (!query) {
         return projects;
       }

@@ -1,20 +1,31 @@
-import { Button, Card, Result } from "antd";
-import { Link } from "react-router-dom";
+import { Button, Result } from "antd";
+import { useNavigate } from "react-router-dom";
 
 const PageNotFound = () => {
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    if (
+      document.referrer &&
+      new URL(document.referrer).origin === window.location.origin
+    ) {
+      navigate(-1);
+    } else {
+      navigate("/");
+    }
+  };
+
   return (
-    <Card bordered={false}>
-      <Result
-        status="404"
-        title="404"
-        subTitle="Sorry, the page you visited does not exist."
-        extra={
-          <Link to="/">
-            <Button type="primary">Back Home</Button>
-          </Link>
-        }
-      />
-    </Card>
+    <Result
+      status="404"
+      title="404"
+      subTitle="Sorry, the page you visited does not exist."
+      extra={
+        <Button type="primary" onClick={handleBack}>
+          Back
+        </Button>
+      }
+    />
   );
 };
 

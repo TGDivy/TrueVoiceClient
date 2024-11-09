@@ -4,7 +4,6 @@ import {
   createUserWithEmailAndPassword,
   isSignInWithEmailLink,
   onAuthStateChanged,
-  sendEmailVerification,
   sendSignInLinkToEmail,
   signInWithEmailAndPassword,
   signInWithEmailLink,
@@ -13,10 +12,8 @@ import {
 } from "firebase/auth";
 import useUserStore from "src/stores/user_store";
 import { auth } from "./firebase_init";
-import { notificationSound } from "src/utils/constants";
-import useProjectStore from "src/stores/projects_store";
-// import useTodoStore from "src/stores/todos.store";
-// import { createUser, getUser } from "../user.api";
+import useTopicStore from "src/stores/topics_store";
+import { getTopics } from "../conversation";
 
 const actionCodeSettings = {
   url: `${window.location.protocol}//${window.location.host}/`,
@@ -31,7 +28,7 @@ onAuthStateChanged(auth, (user) => {
     message.success("You have successfully logged in!");
     useUserStore.getState().setUser(user);
 
-    useProjectStore.getState().setLoading(true);
+    useTopicStore.getState().setLoading(true);
     // getUser(user.uid)
     //   .then((data) => {
     //     console.log(data);
@@ -51,48 +48,25 @@ onAuthStateChanged(auth, (user) => {
     //         message.error("Error creating user");
     //       });
     //   });
-    // getProjects()
-    //   .then((projects) => {
-    //     if (projects.length === 0) {
-    //       notification.info({
-    //         message: "Welcome to Focus!",
-    //         description:
-    //           "You can create a project by typing @ followed by the project name",
-    //         duration: 5,
-    //         placement: "bottomRight",
-    //       });
-    //     }
-    //     useProjectStore.getState().setProjects(projects);
-    //   })
-    //   .catch(() => {})
-    //   .finally(() => {
-    //     useProjectStore.getState().setLoading(false);
-    //   });
-    // getTodos()
-    //   .then((todos) => {
-    //     useTodoStore.getState().setTodos(todos);
-    //   })
-    //   .catch(() => {})
-    //   .finally(() => {
-    //     useProjectStore.getState().setLoading(false);
-    //   });
-
-    if (!user.emailVerified) {
-      notification.open({
-        message: "Please verify your email",
-        description: "We have sent you an email to verify your email address",
-        duration: 0,
-        placement: "bottomRight",
-        type: "warning",
+    getTopics()
+      .then((topics) => {
+        if (topics.length === 0) {
+          notification.info({
+            message: "Welcome to Focus!",
+            description:
+              "You can create a topic by typing @ followed by the project name",
+            duration: 5,
+            placement: "bottomRight",
+          });
+        }
+        useTopicStore.getState().setTopics(topics);
+      })
+      .catch(() => {
+        message.error("Error getting topics");
+      })
+      .finally(() => {
+        useTopicStore.getState().setLoading(false);
       });
-      notificationSound().play();
-
-      sendEmailVerification(user, actionCodeSettings).then(() => {
-        // Email verification sent!
-        // ...
-      });
-      return;
-    }
 
     useUserStore.getState().setUserInfo({
       name: user.displayName || "",
