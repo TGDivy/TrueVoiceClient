@@ -129,3 +129,28 @@ export const voteComment = async (
   });
   return response.data;
 };
+
+export const approveComment = async (commentId: string) => {
+  const response = await conversationAPI.post<string>(
+    `/comment/${commentId}/approve`
+  );
+  return response.data;
+};
+
+export const rejectComment = async (commentId: string) => {
+  const response = await conversationAPI.post<string>(
+    `/comment/${commentId}/reject`
+  );
+  return response.data;
+};
+
+export interface CommentSummary {
+  summary: string;
+}
+
+export const getCommentSummary = async (topicId: string) => {
+  const response = await conversationAPI.get<CommentSummary>(
+    `/topic/${topicId}/comments_summary`
+  );
+  return response.data;
+};

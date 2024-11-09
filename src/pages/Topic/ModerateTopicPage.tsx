@@ -5,6 +5,7 @@ import {
   Col,
   Flex,
   List,
+  message,
   Row,
   Tabs,
   TabsProps,
@@ -12,7 +13,12 @@ import {
 } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getPendingCommentsForTopic, TopicComment } from "src/api/conversation";
+import {
+  approveComment,
+  getPendingCommentsForTopic,
+  rejectComment,
+  TopicComment,
+} from "src/api/conversation";
 import { useToken } from "src/utils/antd_components";
 
 const PendingCommentCluster = () => {
@@ -29,13 +35,30 @@ const PendingCommentCluster = () => {
     });
   }, [topicId]);
 
-  const approveComment = (comment: TopicComment) => {
-    // Approve the comment
-    // Automatically reject the rest of the comments in the cluster
+  const onApprove = (comment: TopicComment) => {
+    approveComment(comment.comment_id)
+      .then(() => {
+        // Automatically reject the rest of the comments in the cluster
+        const restOfComments = pendingCommentsCluster
+          .filter((comments) =>
+            comments.some((c) => c.comment_id !== comment.comment_id)
+          )
+          .flat();
+        restOfComments.forEach((c) => {
+          rejectComment(c.comment_id).catch(() => {
+            message.error("Failed to reject comment");
+          });
+        });
+      })
+      .catch(() => {
+        message.error("Failed to approve comment");
+      });
   };
 
-  const rejectComment = (comment: TopicComment) => {
-    // Reject the comment
+  const onReject = (comment: TopicComment) => {
+    rejectComment(comment.comment_id).catch(() => {
+      message.error("Failed to reject comment");
+    });
   };
 
   if (!pendingCommentsCluster.length) {
