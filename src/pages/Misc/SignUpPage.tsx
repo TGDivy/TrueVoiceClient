@@ -1,5 +1,5 @@
 import { GoogleOutlined } from "@ant-design/icons";
-import { Button, Col, Row, Space, Typography } from "antd";
+import { Button, Col, Row, Typography } from "antd";
 import { onSignInWithGoogle } from "src/api/firebase/authentication";
 import useUserStore from "src/stores/user_store";
 import { useToken } from "src/utils/antd_components";
@@ -54,16 +54,15 @@ export const SignUpPage = () => {
               understanding what large groups of people think in their own
               words, enabled by advanced statistics and machine learning.
             </Typography.Paragraph>
-            <Space direction="vertical">
-              <Button
-                type="primary"
-                size="large"
-                icon={<GoogleOutlined />}
-                onClick={onSignInWithGoogle}
-              >
-                Sign in with Google
-              </Button>
-            </Space>
+            <Button
+              type="primary"
+              size="large"
+              // block
+              icon={<GoogleOutlined />}
+              onClick={onSignInWithGoogle}
+            >
+              Sign in with Google
+            </Button>
           </Col>
         )}
       </Row>
