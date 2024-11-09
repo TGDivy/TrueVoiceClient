@@ -105,6 +105,8 @@ export interface ActivityTopic {
   commentIDsSkipped: string[];
 }
 
+export type voteType = "VOTE_UP" | "VOTE_DOWN" | "SKIPPED";
+
 export const getActivityForTopic = async (
   session_id: string,
   topic_id: string
@@ -115,29 +117,15 @@ export const getActivityForTopic = async (
   return response.data;
 };
 
-export const agreeComment = async (commentId: string, session_id: string) => {
-  const response = await conversationAPI.post<ActivityTopic>(
-    `/comment/${commentId}/agree`,
-    { session_id }
-  );
-  return response.data;
-};
-
-export const disagreeComment = async (
+export const voteComment = async (
   commentId: string,
-  session_id: string
+  session_id: string,
+  vote: voteType
 ) => {
-  const response = await conversationAPI.post<ActivityTopic>(
-    `/comment/${commentId}/disagree`,
-    { session_id }
-  );
-  return response.data;
-};
-
-export const skipComment = async (commentId: string, session_id: string) => {
-  const response = await conversationAPI.post<ActivityTopic>(
-    `/comment/${commentId}/skip`,
-    { session_id }
-  );
+  const response = await conversationAPI.post<ActivityTopic>(`/vote`, {
+    commentId,
+    session_id,
+    vote,
+  });
   return response.data;
 };

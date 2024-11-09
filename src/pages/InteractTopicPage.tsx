@@ -1,23 +1,32 @@
 import {
   CheckOutlined,
   CloseOutlined,
-  DislikeFilled,
-  LikeFilled,
   LineOutlined,
+  SendOutlined,
 } from "@ant-design/icons";
 import {
   Button,
   Card,
   Col,
   Flex,
+  Input,
+  message,
   Progress,
   Row,
   Space,
+  Tooltip,
   Typography,
 } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { ActivityTopic, Topic, TopicComment } from "src/api/conversation";
+import {
+  ActivityTopic,
+  createComment,
+  getTopic,
+  Topic,
+  TopicComment,
+  voteComment,
+} from "src/api/conversation";
 import useSessionStore from "src/stores/session_store";
 
 const mockTopicData: Topic = {
@@ -102,6 +111,14 @@ const AgreeDisagreeSkip = (params: { topicId: string }) => {
   );
   const [currentComment, setCurrentComment] = useState<TopicComment>();
 
+  const handleVote = (vote: "VOTE_UP" | "VOTE_DOWN" | "SKIPPED") => {
+    if (!currentComment) return;
+    if (!sessionId) return;
+    voteComment(currentComment.comment_id, sessionId, vote).then(() => {
+      fetchActivityForTopic(sessionId, topicId);
+    });
+  };
+
   useEffect(() => {
     if (!topicId) return;
     if (!sessionId) return;
@@ -117,7 +134,7 @@ const AgreeDisagreeSkip = (params: { topicId: string }) => {
   }, []);
 
   return (
-    <Space direction="vertical" style={{ width: "100%" }}>
+    <Space direction="vertical" style={{ width: "100%" }} size={24}>
       <Progress
         percent={
           (sessionData.commentIDsApproved.length /
@@ -132,16 +149,31 @@ const AgreeDisagreeSkip = (params: { topicId: string }) => {
           }`
         }
       />
-      <Typography.Title level={5}>{currentComment?.content}</Typography.Title>
+      <Typography.Paragraph>{currentComment?.content}</Typography.Paragraph>
 
       <Flex style={{ width: "100%" }} gap={8}>
-        <Button block icon={<CloseOutlined />} type="primary">
+        <Button
+          block
+          icon={<CloseOutlined />}
+          type="primary"
+          onClick={() => handleVote("VOTE_DOWN")}
+        >
           Disagree
         </Button>
-        <Button block icon={<LineOutlined />} type="primary">
+        <Button
+          block
+          icon={<LineOutlined />}
+          type="primary"
+          onClick={() => handleVote("SKIPPED")}
+        >
           Skip
         </Button>
-        <Button block icon={<CheckOutlined />} type="primary">
+        <Button
+          block
+          icon={<CheckOutlined />}
+          type="primary"
+          onClick={() => handleVote("VOTE_UP")}
+        >
           Agree
         </Button>
       </Flex>
@@ -149,9 +181,79 @@ const AgreeDisagreeSkip = (params: { topicId: string }) => {
   );
 };
 
+const AddComment = (params: { topic_id: string }) => {
+  const { topic_id } = params;
+  const [content, setComment] = useState("");
+  const [submitting, setSubmitting] = useState(false);
+  const session_id = useSessionStore((state) => state.session_id);
+
+  const handleAddComment = async () => {
+    if (!content) return;
+    setSubmitting(true);
+    createComment({ content, topic_id, session_id })
+      .then(() => {
+        message.success("Comment submitted for review!");
+        setComment("");
+      })
+      .catch((error) => {
+        if (error instanceof Error) {
+          message.error(error.message);
+        }
+        console.error(error);
+      })
+      .finally(() => {
+        setSubmitting(false);
+      });
+  };
+
+  return (
+    <Flex>
+      <Input
+        placeholder="Suggest your own statement here."
+        variant="filled"
+        value={content}
+        onChange={(e) => setComment(e.target.value)}
+        onPressEnter={handleAddComment}
+        styles={{
+          affixWrapper: {
+            padding: "16px 32px",
+          },
+        }}
+        showCount
+        maxLength={200}
+        suffix={
+          <Tooltip title="Submit">
+            <Button
+              type="text"
+              size="small"
+              onClick={handleAddComment}
+              icon={<SendOutlined />}
+              style={{
+                opacity: content ? 1 : 0,
+              }}
+              loading={submitting}
+            />
+          </Tooltip>
+        }
+      />
+    </Flex>
+  );
+};
+
 const InteractTopicPage = () => {
   const topicId = useParams<{ topicId: string }>().topicId;
-  const [topicData, setTopicData] = useState<Topic>(mockTopicData);
+  const [topicData, setTopicData] = useState<Topic>();
+
+  useEffect(() => {
+    if (!topicId) return;
+    getTopic(topicId).then((data) => {
+      setTopicData(data);
+    });
+  }, [topicId]);
+
+  if (!topicData || !topicId) {
+    return null;
+  }
 
   return (
     <div
@@ -182,34 +284,25 @@ const InteractTopicPage = () => {
             </span>
           </Typography.Title>
         </Col>
-        <Col span={24}>
-          <Typography.Paragraph>{topicData.description}</Typography.Paragraph>
-        </Col>
+        {topicData.description && (
+          <Col span={24}>
+            <Typography.Paragraph>{topicData.description}</Typography.Paragraph>
+          </Col>
+        )}
         {topicId && (
-          <Col
-            span={24}
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              scrollbarWidth: "none",
-              overflowX: "scroll",
-              padding: "10px",
-            }}
-          >
+          <Col span={24}>
             <Card>
               <AgreeDisagreeSkip topicId={topicId} />
             </Card>
           </Col>
         )}
         <Col md={24}>
-          <Typography.Title level={5} disabled>
-            New Features Coming Soon
+          <Typography.Title level={5}>
+            Is the topic missing a key statement?
           </Typography.Title>
-          <Typography.Paragraph disabled>
-            We are working on new features to help you manage your time, track
-            your progress, and stay focused on your goals. You will also be able
-            to reflect on your day and plan.
-          </Typography.Paragraph>
+        </Col>
+        <Col md={24}>
+          <AddComment topic_id={topicId} />
         </Col>
       </Row>
     </div>

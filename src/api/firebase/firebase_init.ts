@@ -4,13 +4,13 @@ import { getAuth } from "firebase/auth";
 import { getMessaging } from "firebase/messaging";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCmXk3ZBMJ-or_IiTFCN4LOnvstpcfQwBI",
-  authDomain: "grow-v2-d06b7.firebaseapp.com",
-  projectId: "grow-v2-d06b7",
-  storageBucket: "grow-v2-d06b7.appspot.com",
-  messagingSenderId: "115811593555",
-  appId: "1:115811593555:web:e0ec9c88c0ac6e6492c5a6",
-  measurementId: "G-TYLV89XWQK",
+  apiKey: "AIzaSyByTn_rHX85l9glkJj8AqUY5uNWNK1aA40",
+  authDomain: "truevoice-ff4da.firebaseapp.com",
+  projectId: "truevoice-ff4da",
+  storageBucket: "truevoice-ff4da.firebasestorage.app",
+  messagingSenderId: "65856361505",
+  appId: "1:65856361505:web:8a053bd2bb6c233eb1bf60",
+  measurementId: "G-0RLGG06G70",
 };
 
 // Initialize Firebase

@@ -44,9 +44,7 @@ const useUserStore = create<userStoreType>()(
 
         // get them from local storage, or check the system theme
         theme: !window.localStorage.getItem("theme")
-          ? window.matchMedia("(prefers-color-scheme: dark)").matches
-            ? "dark"
-            : "light"
+          ? "light"
           : (window.localStorage.getItem("theme") as "light" | "dark"),
 
         setTheme: (theme: "light" | "dark") => {

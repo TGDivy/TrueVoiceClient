@@ -1,4 +1,4 @@
-import { ArrowLeftOutlined, CheckSquareOutlined } from "@ant-design/icons";
+import { CheckSquareOutlined } from "@ant-design/icons";
 import {
   Button,
   Card,
@@ -6,7 +6,6 @@ import {
   Flex,
   List,
   Row,
-  Space,
   Tabs,
   TabsProps,
   Typography,
@@ -29,6 +28,15 @@ const PendingCommentCluster = () => {
       setPendingCommentsCluster(comments);
     });
   }, [topicId]);
+
+  const approveComment = (comment: TopicComment) => {
+    // Approve the comment
+    // Automatically reject the rest of the comments in the cluster
+  };
+
+  const rejectComment = (comment: TopicComment) => {
+    // Reject the comment
+  };
 
   if (!pendingCommentsCluster.length) {
     return (
