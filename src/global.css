@@ -1,0 +1,159 @@
+/* 
+background: linear-gradient(74deg,var(--bard-color-brand-text-gradient-stop-1) 0,var(--bard-color-brand-text-gradient-stop-2) 9%,var(--bard-color-brand-text-gradient-stop-3) 20%,var(--bard-color-brand-text-gradient-stop-3) 24%,var(--bard-color-brand-text-gradient-stop-2) 35%,var(--bard-color-brand-text-gradient-stop-1) 44%,var(--bard-color-brand-text-gradient-stop-2) 50%,var(--bard-color-brand-text-gradient-stop-3) 56%,var(--bard-color-surface) 75%,var(--bard-color-surface) 100%);
+*/
+
+/* Css file define the above variables below*/
+
+:root {
+    --bard-color-brand-text-gradient-stop-1: #4285f4;
+    --bard-color-brand-text-gradient-stop-2: #9b72cb;
+    --bard-color-brand-text-gradient-stop-3: #d96570;
+    --bard-color-surface: #131314;
+}
+
+.welcome-text {
+    background: linear-gradient(74deg,
+            var(--bard-color-brand-text-gradient-stop-1) 0,
+            var(--bard-color-brand-text-gradient-stop-2) 9%,
+            var(--bard-color-brand-text-gradient-stop-3) 20%,
+            var(--bard-color-brand-text-gradient-stop-3) 24%,
+            var(--bard-color-brand-text-gradient-stop-2) 35%,
+            var(--bard-color-brand-text-gradient-stop-1) 44%,
+            var(--bard-color-brand-text-gradient-stop-2) 50%,
+            var(--bard-color-brand-text-gradient-stop-3) 56%,
+            var(--bard-color-surface) 75%,
+            var(--bard-color-surface) 100%);
+    background-size: 400% 100%;
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    position: relative;
+    display: inline-block;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: reveal 2s forwards;
+    /* wrap */
+    white-space: nowrap;
+}
+
+.welcome-text::after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: var(--ant-layout-body-bg);
+    animation: slide 2s forwards cubic-bezier(0.075, 0.82, 0.165, 1);
+}
+
+@keyframes slide {
+    from {
+        transform: translateX(0%);
+    }
+
+    to {
+        transform: translateX(100%);
+        display: none;
+    }
+}
+
+@keyframes reveal {
+    from {
+        color: transparent;
+    }
+
+    to {
+        color: inherit;
+    }
+}
+
+/* on hover darken background color */
+.ant-card-hoverable {
+    transition: background-color 0.3s;
+
+    &:hover {
+        background-color: var(--ant-color-bg-elevated);
+    }
+}
+
+/* Scroll bar theming */
+::-webkit-scrollbar {
+    width: 15px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--ant-color-bg-elevated);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--ant-layout-body-bg);
+    border-radius: 15px;
+    border: 5px solid var(--ant-color-bg-elevated);
+}
+
+::-webkit-scrollbar-thumb:hover {
+    border: 4px solid var(--ant-color-bg-elevated);
+}
+
+.ant-switch.ant-switch-checked {
+    background-color: var(--ant-color-bg-elevated) !important;
+}
+
+@keyframes wave {
+    0% {
+        transform: translateX(-100%);
+    }
+
+    100% {
+        transform: translateX(0%);
+    }
+}
+
+/* Menu CSS */
+
+.ant-menu-title-content {
+    transition: unset !important;
+}
+
+.ant-menu-item-selected {
+    background: var(--ant-color-info-hover) !important;
+    color: var(--ant-menu-dark-item-selected-color) !important;
+}
+
+.ant-menu-dark.ant-menu-submenu-popup>.ant-menu {
+    background-color: var(--ant-color-bg-elevated);
+}
+
+.ant-menu-item.ant-menu-item-selected.ant-menu-item-only-child {
+    background-color: var(--ant-color-info-hover) !important;
+    color: var(--ant-menu-dark-item-selected-color) !important;
+}
+
+div.ant-menu-submenu-title {
+    color: var(--ant-color-text);
+}
+
+.ant-menu-light .ant-menu-submenu-selected>.ant-menu-submenu-title {
+    color: var(--ant-menu-dark-item-selected-color) !important;
+    background: var(--ant-color-info-hover) !important;
+
+}
+
+.ant-menu-dark .ant-menu-submenu-selected>.ant-menu-submenu-title {
+    color: var(--ant-color-text);
+    background: var(--ant-color-info-hover) !important;
+
+}
+
+.ant-menu-dark.ant-menu-inline .ant-menu-sub.ant-menu-inline {
+    background-color: var(--ant-menu-dark-bg);
+}
+
+.ant-menu-light.ant-menu-inline .ant-menu-sub.ant-menu-inline {
+    background-color: var(--ant-menu-light-bg);
+}
