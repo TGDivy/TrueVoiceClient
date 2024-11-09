@@ -36,7 +36,7 @@ background: linear-gradient(74deg,var(--bard-color-brand-text-gradient-stop-1) 0
     -webkit-text-fill-color: transparent;
     animation: reveal 2s forwards;
     /* wrap */
-    white-space: nowrap;
+    /* white-space: nowrap; */
 }
 
 .welcome-text::after {

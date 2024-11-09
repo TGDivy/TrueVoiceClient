@@ -19,6 +19,8 @@ import useUserStore from "./stores/user_store";
 import { useBreakpoint } from "./utils/antd_components";
 import { themes } from "./utils/themes";
 import HandleServiceWorker from "./utils/HandleSW";
+import InteractLayout from "./components/page_layout/InteractLayout";
+import InteractTopicPage from "./pages/InteractTopicPage";
 
 const CustomizeRenderEmpty = () => {
   return (
@@ -88,8 +90,15 @@ function App() {
                 <Route path="topics" element={<TopicsPage />} />
                 <Route path="settings" element={<SettingsPage />} />
               </Route>
-              <Route path="" key={"home_page"}>
-                <Route path="settings2" element={<SettingsPage />} />
+              <Route
+                path="interact"
+                element={<InteractLayout />}
+                key={"interact"}
+              >
+                <Route
+                  path="topic/:topicId/*"
+                  element={<InteractTopicPage />}
+                />
                 <Route path="*" element={<PageNotFound />} />
               </Route>
             </Route>

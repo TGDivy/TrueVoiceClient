@@ -1,28 +1,15 @@
 import { Button, Layout, Result } from "antd";
-import { Navigate, Outlet, useLocation } from "react-router-dom";
-import useUserStore from "src/stores/user_store";
+import { Outlet } from "react-router-dom";
 import { useBreakpoint } from "src/utils/antd_components";
 import ErrorBoundary from "../ErrorBoundary";
 import MainHeader from "./MainHeader";
-import MainSideBar from "./MainSideBar";
 
-const DefaultLayout = () => {
+const InteractLayout = () => {
   const breaks = useBreakpoint();
-  const user = useUserStore((state) => state.user);
-  const location = useLocation();
-
-  if (!user && location.pathname !== "/signup") {
-    return <Navigate to="/signup" />;
-  }
-
-  if (user && location.pathname === "/signup") {
-    return <Navigate to="/" />;
-  }
 
   return (
     <>
       <Layout>
-        {breaks.sm && <MainSideBar />}
         <Layout>
           <MainHeader />
           <Layout.Content
@@ -51,4 +38,4 @@ const DefaultLayout = () => {
   );
 };
 
-export default DefaultLayout;
+export default InteractLayout;
