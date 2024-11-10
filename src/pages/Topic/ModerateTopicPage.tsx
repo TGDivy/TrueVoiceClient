@@ -37,19 +37,7 @@ const PendingCommentCluster = () => {
 
   const onApprove = (comment: TopicComment) => {
     approveComment(comment.comment_id)
-      .then(() => {
-        // Automatically reject the rest of the comments in the cluster
-        const restOfComments = pendingCommentsCluster
-          .filter((comments) =>
-            comments.some((c) => c.comment_id !== comment.comment_id)
-          )
-          .flat();
-        restOfComments.forEach((c) => {
-          rejectComment(c.comment_id).catch(() => {
-            message.error("Failed to reject comment");
-          });
-        });
-      })
+      .then(() => {})
       .catch(() => {
         message.error("Failed to approve comment");
       });
@@ -75,12 +63,32 @@ const PendingCommentCluster = () => {
     <List grid={{ gutter: 16, column: 2 }}>
       {pendingCommentsCluster.map((comments, index) => (
         <List.Item key={index}>
-          <Card title={`Cluster ${index + 1}`}>
+          <Card>
             <List
               dataSource={comments}
               renderItem={(comment) => (
-                <List.Item>
-                  <Card title={comment.content} />
+                <List.Item
+                  actions={[
+                    <Button
+                      type="text"
+                      danger
+                      onClick={() => onReject(comment)}
+                    >
+                      Reject
+                    </Button>,
+                    <Button
+                      type="text"
+                      onClick={() => onApprove(comment)}
+                      icon={<CheckSquareOutlined />}
+                    >
+                      Approve
+                    </Button>,
+                  ]}
+                >
+                  <List.Item.Meta
+                    title={comment.content}
+                    description={comment.createdAt}
+                  />
                 </List.Item>
               )}
             />

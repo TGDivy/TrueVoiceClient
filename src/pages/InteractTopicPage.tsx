@@ -22,6 +22,7 @@ import { useParams } from "react-router-dom";
 import {
   ActivityTopic,
   createComment,
+  getCommentsForTopic,
   getTopic,
   Topic,
   TopicComment,
@@ -81,8 +82,8 @@ const mockTopicComments: TopicComment[] = [
 ];
 
 const mockSessionData: ActivityTopic = {
-  commentIDsApproved: ["1"],
-  commentIDsRejected: [],
+  commentIDsUpVoted: ["1", "a"],
+  commentIDsDownVoted: [],
   commentIDsSkipped: ["2"],
   session_id: "2465",
   topic_id: "123",
@@ -90,63 +91,63 @@ const mockSessionData: ActivityTopic = {
 
 const AgreeDisagreeSkip = (params: { topicId: string }) => {
   const { topicId } = params;
-  const [topicComments, setTopicComments] =
-    useState<TopicComment[]>(mockTopicComments);
+  const [topicComments, setTopicComments] = useState<TopicComment[]>([]);
 
-  const [sessionId, fetchActivityForTopic, activity_topics] = useSessionStore(
-    (state) => [
+  const [sessionId, fetchActivityForTopic, activity_topics, handleVote] =
+    useSessionStore((state) => [
       state.session_id,
       state.fetchActivityForTopic,
       state.activity_topics,
-    ]
-  );
+      state.handleVote,
+    ]);
 
-  // const sessionData = activity_topics[topicId];
-  const sessionData = mockSessionData;
-  const commentsToDo = topicComments.filter(
-    (comment) =>
-      !sessionData.commentIDsApproved.includes(comment.comment_id) &&
-      !sessionData.commentIDsRejected.includes(comment.comment_id) &&
-      !sessionData.commentIDsSkipped.includes(comment.comment_id)
-  );
-  const [currentComment, setCurrentComment] = useState<TopicComment>();
+  const sessionData = activity_topics[topicId];
+  console.log("activity_topics", activity_topics);
+  // const sessionData = mockSessionData;
+  const commentsToDo = sessionData
+    ? topicComments.filter(
+        (comment) =>
+          !sessionData.commentIDsUpVoted.includes(comment.comment_id) &&
+          !sessionData.commentIDsDownVoted.includes(comment.comment_id) &&
+          !sessionData.commentIDsSkipped.includes(comment.comment_id)
+      )
+    : undefined;
 
-  const handleVote = (vote: "VOTE_UP" | "VOTE_DOWN" | "SKIPPED") => {
-    if (!currentComment) return;
-    if (!sessionId) return;
-    voteComment(currentComment.comment_id, sessionId, vote).then(() => {
-      fetchActivityForTopic(sessionId, topicId);
-    });
-  };
+  // current comment is the first comment that hasn't been voted on yet
+  const currentComment = commentsToDo && commentsToDo[0];
 
   useEffect(() => {
     if (!topicId) return;
     if (!sessionId) return;
+    console.log("fetching comments for topic", topicId);
+    getCommentsForTopic(topicId).then((comments) => {
+      setTopicComments(comments);
+    });
     fetchActivityForTopic(sessionId, topicId);
   }, [topicId, sessionId]);
 
-  useEffect(() => {
-    if (commentsToDo.length === 0) {
-      setCurrentComment(undefined);
-      return;
-    }
-    setCurrentComment(commentsToDo[0]);
-  }, []);
+  if (!currentComment) {
+    return (
+      <Typography.Paragraph>No more comments to vote on.</Typography.Paragraph>
+    );
+  }
 
   return (
     <Space direction="vertical" style={{ width: "100%" }} size={24}>
       <Progress
         percent={
-          (sessionData.commentIDsApproved.length /
-            (sessionData.commentIDsApproved.length +
-              sessionData.commentIDsRejected.length)) *
+          ((sessionData.commentIDsUpVoted.length +
+            sessionData.commentIDsDownVoted.length +
+            sessionData.commentIDsSkipped.length) /
+            topicComments.length) *
           100
         }
         format={(_percent?: number) =>
-          `${sessionData.commentIDsApproved.length} / ${
-            sessionData.commentIDsApproved.length +
-            sessionData.commentIDsRejected.length
-          }`
+          `${
+            sessionData.commentIDsUpVoted.length +
+            sessionData.commentIDsDownVoted.length +
+            sessionData.commentIDsSkipped.length
+          } / ${topicComments.length}`
         }
       />
       <Typography.Paragraph>{currentComment?.content}</Typography.Paragraph>
@@ -156,7 +157,7 @@ const AgreeDisagreeSkip = (params: { topicId: string }) => {
           block
           icon={<CloseOutlined />}
           type="primary"
-          onClick={() => handleVote("VOTE_DOWN")}
+          onClick={() => handleVote(currentComment, "VOTE_DOWN")}
         >
           Disagree
         </Button>
@@ -164,7 +165,7 @@ const AgreeDisagreeSkip = (params: { topicId: string }) => {
           block
           icon={<LineOutlined />}
           type="primary"
-          onClick={() => handleVote("SKIPPED")}
+          onClick={() => handleVote(currentComment, "SKIPPED")}
         >
           Skip
         </Button>
@@ -172,7 +173,7 @@ const AgreeDisagreeSkip = (params: { topicId: string }) => {
           block
           icon={<CheckOutlined />}
           type="primary"
-          onClick={() => handleVote("VOTE_UP")}
+          onClick={() => handleVote(currentComment, "VOTE_UP")}
         >
           Agree
         </Button>

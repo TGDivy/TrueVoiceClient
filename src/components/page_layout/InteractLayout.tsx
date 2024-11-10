@@ -2,7 +2,7 @@ import { Button, Layout, Result } from "antd";
 import { Outlet } from "react-router-dom";
 import { useBreakpoint } from "src/utils/antd_components";
 import ErrorBoundary from "../ErrorBoundary";
-import MainHeader from "./MainHeader";
+import InteractHeader from "./InteractHeader";
 
 const InteractLayout = () => {
   const breaks = useBreakpoint();
@@ -11,7 +11,7 @@ const InteractLayout = () => {
     <>
       <Layout>
         <Layout>
-          <MainHeader />
+          <InteractHeader />
           <Layout.Content
             style={{
               padding: breaks.sm ? "20px 40px" : "20px 20px",

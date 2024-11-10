@@ -3,6 +3,7 @@ import { Button, Flex } from "antd";
 import { Sider, useToken } from "src/utils/antd_components";
 import { useLocalStorageState } from "src/utils/hooks";
 import { BottomMenu, TopMenu } from "./menu_items";
+import { useLocation } from "react-router-dom";
 
 const MainSideBar = () => {
   const [themeCollapsed, setThemeCollapsed] = useLocalStorageState(
@@ -58,11 +59,6 @@ const MainSideBar = () => {
                 !themeCollapsed ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />
               }
             />
-            {/* <Divider
-              style={{
-                opacity: 0,
-              }}
-            /> */}
             <TopMenu themeCollapsed={themeCollapsed} />
           </div>
           <BottomMenu themeCollapsed={themeCollapsed} />

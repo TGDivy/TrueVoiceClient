@@ -96,7 +96,7 @@ export const createComment = async (commentInput: createCommentInput) => {
 
 export const getCommentsForTopic = async (topicId: string) => {
   const response = await conversationAPI.get<TopicComment[]>(
-    `/topic/${topicId}/comments`
+    `/topic/${topicId}/comment`
   );
   return response.data;
 };
@@ -111,8 +111,8 @@ export const getPendingCommentsForTopic = async (topicId: string) => {
 export interface ActivityTopic {
   session_id: string;
   topic_id: string;
-  commentIDsApproved: string[];
-  commentIDsRejected: string[];
+  commentIDsUpVoted: string[];
+  commentIDsDownVoted: string[];
   commentIDsSkipped: string[];
 }
 
@@ -123,7 +123,7 @@ export const getActivityForTopic = async (
   topic_id: string
 ) => {
   const response = await conversationAPI.get<ActivityTopic>(
-    `/activity/${session_id}/${topic_id}`
+    `/session/${session_id}/topics/${topic_id}`
   );
   return response.data;
 };

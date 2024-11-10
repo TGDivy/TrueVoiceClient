@@ -2,7 +2,7 @@ import { Button, Drawer, Flex, Typography } from "antd";
 
 import { MenuOutlined } from "@ant-design/icons";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { Header, useBreakpoint, useToken } from "src/utils/antd_components";
 import UserProfile from "./UserProfile";
 import { BottomMenu, TopMenu } from "./menu_items";
@@ -11,6 +11,10 @@ const MainHeader = () => {
   const [drawer, setDrawer] = useState(false);
   const { token } = useToken();
   const breaks = useBreakpoint();
+
+  const location = useLocation();
+
+  const isInteract = location.pathname.includes("/interact");
 
   return (
     <>
