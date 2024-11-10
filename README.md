@@ -1,3 +1,5 @@
+Backend Repo: https://github.com/ivonastojanovic/tv-backend
+
 # React + TypeScript + Vite
 
 This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
@@ -29,18 +31,3 @@ export default {
 - Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
 - Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
 
-
-### Concept Guide
-
-#### Concepts:
-
-- Journey: A path, map, compass, globe, or footprints.
-- Self-improvement: A person ascending a mountain, a rising sun, a blooming flower, or a checklist with checkmarks.
-- Everlasting: A circle, infinity symbol, or spiral.
-
-#### Combinations:
-
-- A person walking on a path towards a rising sun.
-- A globe with a checklist and checkmarks.
-- A blooming flower inside a circle.
-- A compass with an infinity symbol in the center.
