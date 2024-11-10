@@ -39,6 +39,34 @@ background: linear-gradient(74deg,var(--bard-color-brand-text-gradient-stop-1) 0
     /* white-space: nowrap; */
 }
 
+.copy-text {
+    background: linear-gradient(74deg,
+            var(--bard-color-brand-text-gradient-stop-1) 0,
+            var(--bard-color-brand-text-gradient-stop-2) 9%,
+            var(--bard-color-brand-text-gradient-stop-3) 20%,
+            var(--bard-color-brand-text-gradient-stop-3) 24%,
+            var(--bard-color-brand-text-gradient-stop-2) 35%,
+            var(--bard-color-brand-text-gradient-stop-1) 44%,
+            var(--bard-color-brand-text-gradient-stop-2) 50%,
+            var(--bard-color-brand-text-gradient-stop-3) 56%,
+            var(--bard-color-surface) 75%,
+            var(--bard-color-surface) 100%);
+    background-size: 400% 100%;
+
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+
+    position: relative;
+    display: inline-block;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: reveal 2s forwards;
+    /* wrap */
+    /* white-space: nowrap; */
+}
+
 .welcome-text::after {
     content: "";
     position: absolute;

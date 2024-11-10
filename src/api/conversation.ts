@@ -58,6 +58,17 @@ export const getTopic = async (topicId: string) => {
   return response.data;
 };
 
+export const updateTopic = async (
+  topicId: string,
+  topicInput: createTopicRequest
+) => {
+  const response = await conversationAPI.put<Topic>(
+    `/topic/${topicId}`,
+    topicInput
+  );
+  return response.data;
+};
+
 export interface TopicComment {
   session_id?: string;
   down_votes: number;
@@ -118,14 +129,14 @@ export const getActivityForTopic = async (
 };
 
 export const voteComment = async (
-  commentId: string,
+  comment_id: string,
   session_id: string,
-  vote: voteType
+  vote_type: voteType
 ) => {
-  const response = await conversationAPI.post<ActivityTopic>(`/vote`, {
-    commentId,
+  const response = await conversationAPI.put<ActivityTopic>(`/vote`, {
+    comment_id,
     session_id,
-    vote,
+    vote_type,
   });
   return response.data;
 };

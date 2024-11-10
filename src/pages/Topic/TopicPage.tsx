@@ -1,8 +1,8 @@
 import { CheckSquareOutlined, FolderFilled } from "@ant-design/icons";
-import { Col, Row, Typography } from "antd";
+import { Col, Row, Space, Typography } from "antd";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import { getTopic, Topic } from "src/api/conversation";
+import { getTopic, Topic, updateTopic } from "src/api/conversation";
 import LinkCard from "src/components/basics/LinkCard";
 import { useToken } from "src/utils/antd_components";
 
@@ -21,6 +21,38 @@ const TopicPage = () => {
   });
 
   const { token } = useToken();
+
+  const onEditTitle = (newTitle: string) => {
+    if (!topicId) {
+      return;
+    }
+    updateTopic(topicId, {
+      title: newTitle,
+      description: topicData.description,
+    })
+      .then(() => {
+        setTopicData((prev) => ({ ...prev, title: newTitle }));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
+  const onEditDescription = (newDescription: string) => {
+    if (!topicId) {
+      return;
+    }
+    updateTopic(topicId, {
+      title: topicData.title,
+      description: newDescription,
+    })
+      .then(() => {
+        setTopicData((prev) => ({ ...prev, description: newDescription }));
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
 
   useEffect(() => {
     if (!topicId) {
@@ -58,6 +90,11 @@ const TopicPage = () => {
             style={{
               overflow: "hidden",
             }}
+            editable={{
+              onChange: onEditTitle,
+              text: topicData.title,
+              tooltip: "Click to edit title",
+            }}
           >
             <span key={topicData.topic_id} className="welcome-text">
               {topicData.title}
@@ -65,7 +102,15 @@ const TopicPage = () => {
           </Typography.Title>
         </Col>
         <Col span={24}>
-          <Typography.Paragraph>{topicData.description}</Typography.Paragraph>
+          <Typography.Paragraph
+            editable={{
+              onChange: onEditDescription,
+              text: topicData.description,
+              tooltip: "Click to edit description",
+            }}
+          >
+            Description: {topicData.description}
+          </Typography.Paragraph>
         </Col>
         <Col
           span={24}
@@ -91,14 +136,21 @@ const TopicPage = () => {
           />
         </Col>
         <Col md={24}>
-          <Typography.Title level={5} disabled>
-            New Features Coming Soon
-          </Typography.Title>
-          <Typography.Paragraph disabled>
-            We are working on new features to help you manage your time, track
-            your progress, and stay focused on your goals. You will also be able
-            to reflect on your day and plan.
-          </Typography.Paragraph>
+          <Space direction="vertical">
+            <Typography.Title level={5} disabled>
+              Share this topic link with others:
+            </Typography.Title>
+            <Typography.Text
+              copyable={{
+                text: `${window.location.origin}/interact/topic/${topicId}`,
+                tooltips: ["Copy", "Copied!"],
+              }}
+            >
+              <span key={topicData.topic_id} className="copy-text">
+                {`${window.location.origin}/interact/topic/${topicId}`}
+              </span>
+            </Typography.Text>
+          </Space>
         </Col>
       </Row>
     </div>

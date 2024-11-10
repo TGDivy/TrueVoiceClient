@@ -80,18 +80,7 @@ const PendingCommentCluster = () => {
               dataSource={comments}
               renderItem={(comment) => (
                 <List.Item>
-                  <Card
-                    title={comment.content}
-                    extra={
-                      <CheckSquareOutlined
-                        style={{ fontSize: "24px", color: "green" }}
-                      />
-                    }
-                  >
-                    <Typography.Paragraph>
-                      {comment.session_id}
-                    </Typography.Paragraph>
-                  </Card>
+                  <Card title={comment.content} />
                 </List.Item>
               )}
             />
