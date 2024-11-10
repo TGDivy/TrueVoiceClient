@@ -3,6 +3,8 @@ import useUserStore from "src/stores/user_store";
 import { API_DOMAIN } from "src/utils/constants";
 import { handleAxiosError } from "./errors";
 import { convertDateStringsToDates } from "src/utils/text";
+import { getToken } from "firebase/app-check";
+import { appCheck } from "./firebase/firebase_init";
 
 export const conversationAPI = axios.create({
   baseURL: `${API_DOMAIN}`,
@@ -17,6 +19,12 @@ conversationAPI.interceptors.request.use(async (config) => {
   if (auth_token) {
     config.headers.Authorization = `Bearer ${auth_token}`;
   }
+
+  let appCheckTokenResponse;
+  try {
+    appCheckTokenResponse = await getToken(appCheck, /* forceRefresh= */ false);
+    config.headers["X-Firebase-AppCheck"] = appCheckTokenResponse.token;
+  } catch (err) {}
 
   return config;
 });

@@ -7,6 +7,12 @@ import {
 import { getAuth } from "firebase/auth";
 import { getMessaging } from "firebase/messaging";
 
+declare global {
+  interface Window {
+    FIREBASE_APPCHECK_DEBUG_TOKEN: boolean;
+  }
+}
+
 const firebaseConfig = {
   apiKey: "AIzaSyByTn_rHX85l9glkJj8AqUY5uNWNK1aA40",
   authDomain: "truevoice-ff4da.firebaseapp.com",
@@ -22,6 +28,8 @@ export const app = initializeApp(firebaseConfig);
 export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const messaging = getMessaging(app);
+self.FIREBASE_APPCHECK_DEBUG_TOKEN = true;
+
 export const appCheck = initializeAppCheck(app, {
   provider: new ReCaptchaEnterpriseProvider(
     "6LcUWXoqAAAAAJaJt24UvJhvqNb1sJTzU1t2Gt8b"
