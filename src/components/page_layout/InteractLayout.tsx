@@ -3,6 +3,7 @@ import { Outlet } from "react-router-dom";
 import { useBreakpoint } from "src/utils/antd_components";
 import ErrorBoundary from "../ErrorBoundary";
 import InteractHeader from "./InteractHeader";
+import MainSideBar from "./MainSideBar";
 
 const InteractLayout = () => {
   const breaks = useBreakpoint();
@@ -10,6 +11,7 @@ const InteractLayout = () => {
   return (
     <>
       <Layout>
+        {breaks.sm && <MainSideBar />}
         <Layout>
           <InteractHeader />
           <Layout.Content
@@ -33,7 +35,6 @@ const InteractLayout = () => {
           </Layout.Content>
         </Layout>
       </Layout>
-      {/* <MainFooter /> */}
     </>
   );
 };

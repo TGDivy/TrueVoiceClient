@@ -5,6 +5,7 @@ import {
   SendOutlined,
 } from "@ant-design/icons";
 import {
+  Alert,
   Button,
   Card,
   Col,
@@ -23,10 +24,10 @@ import {
   ActivityTopic,
   createComment,
   getCommentsForTopic,
+  getCommentSummary,
   getTopic,
   Topic,
   TopicComment,
-  voteComment,
 } from "src/api/conversation";
 import useSessionStore from "src/stores/session_store";
 
@@ -89,17 +90,16 @@ const mockSessionData: ActivityTopic = {
   topic_id: "123",
 };
 
-const AgreeDisagreeSkip = (params: { topicId: string }) => {
-  const { topicId } = params;
-  const [topicComments, setTopicComments] = useState<TopicComment[]>([]);
+const AgreeDisagreeSkip = (params: {
+  topicId: string;
+  topicComments: TopicComment[];
+}) => {
+  const { topicId, topicComments } = params;
 
-  const [sessionId, fetchActivityForTopic, activity_topics, handleVote] =
-    useSessionStore((state) => [
-      state.session_id,
-      state.fetchActivityForTopic,
-      state.activity_topics,
-      state.handleVote,
-    ]);
+  const [activity_topics, handleVote] = useSessionStore((state) => [
+    state.activity_topics,
+    state.handleVote,
+  ]);
 
   const sessionData = activity_topics[topicId];
   console.log("activity_topics", activity_topics);
@@ -116,19 +116,12 @@ const AgreeDisagreeSkip = (params: { topicId: string }) => {
   // current comment is the first comment that hasn't been voted on yet
   const currentComment = commentsToDo && commentsToDo[0];
 
-  useEffect(() => {
-    if (!topicId) return;
-    if (!sessionId) return;
-    console.log("fetching comments for topic", topicId);
-    getCommentsForTopic(topicId).then((comments) => {
-      setTopicComments(comments);
-    });
-    fetchActivityForTopic(sessionId, topicId);
-  }, [topicId, sessionId]);
-
   if (!currentComment) {
     return (
-      <Typography.Paragraph>No more comments to vote on.</Typography.Paragraph>
+      <Typography.Paragraph>
+        Thank you for your input! You have reviewed all the different comments
+        on this topic. Feel free to add your own statement below.
+      </Typography.Paragraph>
     );
   }
 
@@ -241,16 +234,53 @@ const AddComment = (params: { topic_id: string }) => {
   );
 };
 
+const AISummary = (params: { topic_id: string }) => {
+  const { topic_id } = params;
+  const [commentSummary, setCommentSummary] = useState<string>("Hello");
+  useEffect(() => {
+    getCommentSummary(topic_id).then((summary) => {
+      setCommentSummary(summary.summary);
+    });
+  }, []);
+
+  if (!commentSummary) {
+    return null;
+  }
+
+  return (
+    <Col span={24}>
+      <Alert
+        message="Summary of Discussions"
+        type="info"
+        description={commentSummary}
+        showIcon
+        closable
+      />
+    </Col>
+  );
+};
+
 const InteractTopicPage = () => {
   const topicId = useParams<{ topicId: string }>().topicId;
   const [topicData, setTopicData] = useState<Topic>();
+  const [topicComments, setTopicComments] = useState<TopicComment[]>([]);
+  const [sessionId, fetchActivityForTopic] = useSessionStore((state) => [
+    state.session_id,
+    state.fetchActivityForTopic,
+  ]);
 
   useEffect(() => {
     if (!topicId) return;
+    if (!sessionId) return;
+    console.log("fetching comments for topic", topicId);
+    getCommentsForTopic(topicId).then((comments) => {
+      setTopicComments(comments);
+    });
     getTopic(topicId).then((data) => {
       setTopicData(data);
     });
-  }, [topicId]);
+    fetchActivityForTopic(sessionId, topicId);
+  }, [topicId, sessionId]);
 
   if (!topicData || !topicId) {
     return null;
@@ -293,10 +323,14 @@ const InteractTopicPage = () => {
         {topicId && (
           <Col span={24}>
             <Card>
-              <AgreeDisagreeSkip topicId={topicId} />
+              <AgreeDisagreeSkip
+                topicId={topicId}
+                topicComments={topicComments}
+              />
             </Card>
           </Col>
         )}
+        <AISummary topic_id={topicId} />
         <Col md={24}>
           <Typography.Title level={5}>
             Is the topic missing a key statement?

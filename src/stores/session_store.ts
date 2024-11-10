@@ -52,6 +52,9 @@ const useSessionStore = create<sessionStoreType>()(
         updateSession: (session_id: string) => {
           window.localStorage.setItem("session_id", session_id);
           set({ session_id });
+          Object.keys(get().activity_topics).forEach((topic_id) => {
+            get().fetchActivityForTopic(session_id, topic_id);
+          });
         },
         updateActivity: (activity: ActivityTopic) =>
           set((state) => {

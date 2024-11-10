@@ -1,10 +1,40 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Button, Flex } from "antd";
+import { Alert, Button, Col, Flex } from "antd";
 import { Sider, useToken } from "src/utils/antd_components";
 import { useLocalStorageState } from "src/utils/hooks";
 import { BottomMenu, TopMenu } from "./menu_items";
+import { useState, useEffect } from "react";
+import { getCommentSummary } from "src/api/conversation";
+import { useParams } from "react-router-dom";
 
-const MainSideBar = () => {
+const AISummary = () => {
+  const topicId = useParams<{ topicId: string }>().topicId;
+  const [commentSummary, setCommentSummary] = useState<string>("Hello");
+  useEffect(() => {
+    if (!topicId) return;
+    getCommentSummary(topicId).then((summary) => {
+      setCommentSummary(summary.summary);
+    });
+  }, [topicId]);
+
+  if (!commentSummary || !topicId) {
+    return null;
+  }
+
+  return (
+    <Col span={24}>
+      <Alert
+        message="Summary of Discussions"
+        type="info"
+        description={commentSummary}
+        showIcon
+        closable
+      />
+    </Col>
+  );
+};
+
+const InteractiveSidebar = () => {
   const [themeCollapsed, setThemeCollapsed] = useLocalStorageState(
     "themeCollapsed",
     false
@@ -58,7 +88,7 @@ const MainSideBar = () => {
                 !themeCollapsed ? <MenuFoldOutlined /> : <MenuUnfoldOutlined />
               }
             />
-            <TopMenu themeCollapsed={themeCollapsed} />
+            <AISummary />
           </div>
           <BottomMenu themeCollapsed={themeCollapsed} />
         </Flex>
@@ -67,4 +97,4 @@ const MainSideBar = () => {
   );
 };
 
-export default MainSideBar;
+export default InteractiveSidebar;
