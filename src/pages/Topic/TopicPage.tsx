@@ -1,9 +1,20 @@
 import { CheckSquareOutlined, FolderFilled } from "@ant-design/icons";
-import { Col, Row, Space, Typography } from "antd";
+import {
+  Button,
+  Card,
+  Col,
+  Input,
+  message,
+  Row,
+  Space,
+  Typography,
+} from "antd";
 import { useEffect, useState } from "react";
+import Markdown from "react-markdown";
 import { useParams } from "react-router-dom";
 import { getTopic, Topic, updateTopic } from "src/api/conversation";
 import LinkCard from "src/components/basics/LinkCard";
+import JournalEditor from "src/components/journal/JournalEditor";
 import { useToken } from "src/utils/antd_components";
 
 const TopicPage = () => {
@@ -12,6 +23,8 @@ const TopicPage = () => {
   //     state.loading,
   //   ]);
   const topicId = useParams<{ topicId: string }>().topicId;
+  const [description, setDescription] = useState<string>("");
+  const [editing, setEditing] = useState<boolean>(false);
 
   const [topicData, setTopicData] = useState<Topic>({
     title: "",
@@ -32,6 +45,7 @@ const TopicPage = () => {
     })
       .then(() => {
         setTopicData((prev) => ({ ...prev, title: newTitle }));
+        setDescription(newTitle);
       })
       .catch((error) => {
         console.error(error);
@@ -48,9 +62,11 @@ const TopicPage = () => {
     })
       .then(() => {
         setTopicData((prev) => ({ ...prev, description: newDescription }));
+        message.success("Description updated successfully");
       })
       .catch((error) => {
         console.error(error);
+        message.error("Failed to update description");
       });
   };
 
@@ -61,6 +77,7 @@ const TopicPage = () => {
     getTopic(topicId)
       .then((data) => {
         setTopicData(data);
+        setDescription(data.description);
       })
       .catch((error) => {
         console.error(error);
@@ -101,17 +118,46 @@ const TopicPage = () => {
             </span>
           </Typography.Title>
         </Col>
-        <Col span={24}>
-          <Typography.Paragraph
-            editable={{
-              onChange: onEditDescription,
-              text: topicData.description,
-              tooltip: "Click to edit description",
+        <Col span={16}>
+          {editing ? (
+            <Input.TextArea
+              rows={4}
+              placeholder="Description"
+              allowClear
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
+              showCount
+              maxLength={800}
+            >
+              {description}
+            </Input.TextArea>
+          ) : (
+            <Markdown className="tiptapJournal userResponse">
+              {description}
+            </Markdown>
+          )}
+        </Col>
+        <Col
+          span={8}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-end",
+            gap: token.sizeSM,
+          }}
+        >
+          <Button
+            type="primary"
+            block
+            onClick={() => {
+              setEditing(!editing);
+              onEditDescription(description);
             }}
           >
-            Description: {topicData.description}
-          </Typography.Paragraph>
+            {editing ? "Save" : "Edit"}
+          </Button>
         </Col>
+
         <Col
           span={24}
           style={{

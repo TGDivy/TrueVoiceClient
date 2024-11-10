@@ -19,9 +19,9 @@ import {
   Typography,
 } from "antd";
 import { useEffect, useState } from "react";
+import Markdown from "react-markdown";
 import { useParams } from "react-router-dom";
 import {
-  ActivityTopic,
   createComment,
   getCommentsForTopic,
   getCommentSummary,
@@ -30,65 +30,7 @@ import {
   TopicComment,
 } from "src/api/conversation";
 import useSessionStore from "src/stores/session_store";
-
-const mockTopicData: Topic = {
-  topic_id: "123",
-  title: "How could dealing with the death of a loved one be made eaiser?",
-  commentCount: 4,
-  description:
-    "What feelings and emotions do you experience when dealing with the death of a loved one?\n\nWhat are some ways that you have found helpful in dealing with the death of a loved one?",
-};
-
-const mockTopicComments: TopicComment[] = [
-  {
-    comment_id: "1",
-    content:
-      "Life insurance as well as other similar services should include more extensive mental health support for the bereaved in addition to financial support.",
-    up_votes: 0,
-    down_votes: 0,
-    skipped_times: 0,
-    createdAt: "2021-09-14T00:00:00Z",
-    topic_id: "123",
-  },
-  {
-    comment_id: "2",
-    content:
-      "After the death of a loved one, it is almost impossible to get any help from the government. The process is long and tedious.",
-    up_votes: 0,
-    down_votes: 0,
-    skipped_times: 0,
-    createdAt: "2021-09-14T00:00:00Z",
-    topic_id: "123",
-  },
-  {
-    comment_id: "3",
-    content:
-      "There should be more support groups for the bereaved. It is important to have a support system to help you through the grieving process.",
-    up_votes: 0,
-    down_votes: 0,
-    skipped_times: 0,
-    createdAt: "2021-09-14T00:00:00Z",
-    topic_id: "123",
-  },
-  {
-    comment_id: "4",
-    content:
-      "There should be more support groups for the bereaved. It is important to have a support system to help you through the grieving process.",
-    up_votes: 0,
-    down_votes: 0,
-    skipped_times: 0,
-    createdAt: "2021-09-14T00:00:00Z",
-    topic_id: "123",
-  },
-];
-
-const mockSessionData: ActivityTopic = {
-  commentIDsUpVoted: ["1", "a"],
-  commentIDsDownVoted: [],
-  commentIDsSkipped: ["2"],
-  session_id: "2465",
-  topic_id: "123",
-};
+import "src/components/rte/styles.scss";
 
 const AgreeDisagreeSkip = (params: {
   topicId: string;
@@ -317,7 +259,9 @@ const InteractTopicPage = () => {
         </Col>
         {topicData.description && (
           <Col span={24}>
-            <Typography.Paragraph>{topicData.description}</Typography.Paragraph>
+            <Markdown className="tiptapJournal userResponse">
+              {topicData.description}
+            </Markdown>
           </Col>
         )}
         {topicId && (
@@ -330,7 +274,7 @@ const InteractTopicPage = () => {
             </Card>
           </Col>
         )}
-        <AISummary topic_id={topicId} />
+        {/* <AISummary topic_id={topicId} /> */}
         <Col md={24}>
           <Typography.Title level={5}>
             Is the topic missing a key statement?

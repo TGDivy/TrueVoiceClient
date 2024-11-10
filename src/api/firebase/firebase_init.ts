@@ -1,5 +1,9 @@
 import { getAnalytics } from "firebase/analytics";
 import { initializeApp } from "firebase/app";
+import {
+  initializeAppCheck,
+  ReCaptchaEnterpriseProvider,
+} from "firebase/app-check";
 import { getAuth } from "firebase/auth";
 import { getMessaging } from "firebase/messaging";
 
@@ -18,5 +22,11 @@ export const app = initializeApp(firebaseConfig);
 export const analytics = getAnalytics(app);
 export const auth = getAuth(app);
 export const messaging = getMessaging(app);
+export const appCheck = initializeAppCheck(app, {
+  provider: new ReCaptchaEnterpriseProvider(
+    "6LcUWXoqAAAAAJaJt24UvJhvqNb1sJTzU1t2Gt8b"
+  ),
+  isTokenAutoRefreshEnabled: true,
+});
 
 auth.useDeviceLanguage();

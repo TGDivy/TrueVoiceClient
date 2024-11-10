@@ -1,11 +1,11 @@
 import { MenuFoldOutlined, MenuUnfoldOutlined } from "@ant-design/icons";
-import { Alert, Button, Col, Flex } from "antd";
+import { Alert, Button, Card, Col, Flex, Space, Typography } from "antd";
+import { useEffect, useState } from "react";
+import Markdown from "react-markdown";
+import { useParams } from "react-router-dom";
+import { getCommentSummary } from "src/api/conversation";
 import { Sider, useToken } from "src/utils/antd_components";
 import { useLocalStorageState } from "src/utils/hooks";
-import { BottomMenu, TopMenu } from "./menu_items";
-import { useState, useEffect } from "react";
-import { getCommentSummary } from "src/api/conversation";
-import { useParams } from "react-router-dom";
 
 const AISummary = () => {
   const topicId = useParams<{ topicId: string }>().topicId;
@@ -17,20 +17,19 @@ const AISummary = () => {
     });
   }, [topicId]);
 
-  if (!commentSummary || !topicId) {
-    return null;
-  }
-
   return (
-    <Col span={24}>
-      <Alert
-        message="Summary of Discussions"
-        type="info"
-        description={commentSummary}
-        showIcon
-        closable
-      />
-    </Col>
+    <Flex
+      vertical
+      style={{
+        padding: "0px 12px",
+        width: "100%",
+        height: "100%",
+        overflow: "auto",
+      }}
+    >
+      <Alert message="Summary of Discussions" type="info" showIcon />
+      <Markdown className="tiptapJournal2">{commentSummary}</Markdown>
+    </Flex>
   );
 };
 
@@ -45,7 +44,7 @@ const InteractiveSidebar = () => {
     <>
       <Sider
         collapsible
-        width={264}
+        width={364}
         collapsedWidth={68}
         trigger={null}
         onCollapse={setThemeCollapsed}
@@ -57,7 +56,7 @@ const InteractiveSidebar = () => {
       ></Sider>
       <Sider
         collapsible
-        width={264}
+        width={364}
         collapsedWidth={68}
         trigger={null}
         onCollapse={setThemeCollapsed}
@@ -90,7 +89,6 @@ const InteractiveSidebar = () => {
             />
             <AISummary />
           </div>
-          <BottomMenu themeCollapsed={themeCollapsed} />
         </Flex>
       </Sider>
     </>

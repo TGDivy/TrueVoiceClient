@@ -9,8 +9,8 @@ import { journalExtensions } from "./JournalExtensions";
 
 interface Props {
   loading: boolean;
-  journalSession: any | null;
-  setJournalSession: (journalSession: any) => void;
+  // journalSession: any | null;
+  // setJournalSession: (journalSession: any) => void;
 }
 
 // const getNextPromptAndUpdate = async (
@@ -65,7 +65,7 @@ interface Props {
 // };
 
 const JournalEditor = (props: Props) => {
-  const { loading: initLoading, journalSession, setJournalSession } = props;
+  const { loading: initLoading } = props;
   const [loading, setLoading] = useState(initLoading);
 
   const journalContent = localStorage.getItem("journalContent");
@@ -95,10 +95,10 @@ const JournalEditor = (props: Props) => {
       message.error("Journal entry must be at least 10 words");
       return;
     }
-    if (!journalSession) {
-      message.error("Journal session not found");
-      return;
-    }
+    // if (!journalSession) {
+    //   message.error("Journal session not found");
+    //   return;
+    // }
     setLoading(true);
 
     const json = editor.getJSON();

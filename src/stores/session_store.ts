@@ -13,7 +13,7 @@ import { devtools, subscribeWithSelector } from "zustand/middleware";
 interface sessionStoreType {
   loading: boolean;
   session_id: string;
-  updateSession: (session_id: string) => void;
+  updateSessionID: (session_id: string) => void;
   activity_topics: { [key: string]: ActivityTopic };
   updateActivity: (activity: ActivityTopic) => void;
   fetchActivityForTopic: (session_id: string, topic_id: string) => void;
@@ -49,7 +49,7 @@ const useSessionStore = create<sessionStoreType>()(
     devtools(
       (set, get) => ({
         ...initialValues,
-        updateSession: (session_id: string) => {
+        updateSessionID: (session_id: string) => {
           window.localStorage.setItem("session_id", session_id);
           set({ session_id });
           Object.keys(get().activity_topics).forEach((topic_id) => {

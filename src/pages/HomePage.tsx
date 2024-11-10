@@ -77,16 +77,6 @@ export const HomePage = () => {
 
           <LinkCard title="Integrate" icon={<CheckSquareOutlined />} />
         </Col>
-        <Col md={24}>
-          <Typography.Title level={5} disabled>
-            New Features Coming Soon
-          </Typography.Title>
-          <Typography.Paragraph disabled>
-            We are working on new features to help you manage your time, track
-            your progress, and stay focused on your goals. You will also be able
-            to reflect on your day and plan.
-          </Typography.Paragraph>
-        </Col>
       </Row>
     </div>
   );

@@ -1,14 +1,16 @@
-import { Flex, Space, Tooltip, Typography } from "antd";
+import { Flex, Tooltip, Typography } from "antd";
 
+import { InfoCircleFilled } from "@ant-design/icons";
+import useSessionStore from "src/stores/session_store";
 import { Header, useBreakpoint, useToken } from "src/utils/antd_components";
 import UserProfile from "./UserProfile";
-import useSessionStore from "src/stores/session_store";
 
 const InteractHeader = () => {
   const { token } = useToken();
   const breaks = useBreakpoint();
 
   const sessionId = useSessionStore((state) => state.session_id);
+  const updateSessionID = useSessionStore((state) => state.updateSessionID);
 
   return (
     <>
@@ -47,21 +49,33 @@ const InteractHeader = () => {
         </div>
 
         <UserProfile />
-        <Tooltip
-          title={
-            <>
-              If you want to save your progress, please copy this session ID and
-              save it.
-            </>
-          }
-        >
-          <Flex align="end" gap={8}>
-            <Typography.Text>Session ID:</Typography.Text>
-            <Typography.Text copyable={{ text: sessionId }}>
-              {sessionId}
+
+        <Flex align="center" gap={8}>
+          <Tooltip
+            title={
+              <>
+                If you want to save your progress, please copy this session ID
+                and save it.
+              </>
+            }
+          >
+            <Typography.Text>
+              <InfoCircleFilled />
+              {"  "} Session ID:
             </Typography.Text>
-          </Flex>
-        </Tooltip>
+          </Tooltip>
+          <Typography.Text
+            copyable={{ text: sessionId }}
+            editable={{
+              tooltip: "To resume a session, paste the session ID here",
+              onChange(value) {
+                updateSessionID(value);
+              },
+            }}
+          >
+            {sessionId}
+          </Typography.Text>
+        </Flex>
       </Header>
     </>
   );

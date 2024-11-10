@@ -88,7 +88,7 @@ export interface createCommentInput {
 
 export const createComment = async (commentInput: createCommentInput) => {
   const response = await conversationAPI.post<TopicComment>(
-    "/comment",
+    "/add_comment",
     commentInput
   );
   return response.data;
